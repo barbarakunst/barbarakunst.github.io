@@ -8,10 +8,10 @@
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts for modern typography and marker style -->
+    <!-- Google Fonts for modern typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
 
     <style>
         /* Keyframes for the scrolling banner animation */
@@ -20,50 +20,68 @@
                 background-position: 0 0;
             }
             to {
-                /* The value should match the background-size to create a seamless loop */
                 background-position: -75px 0;
             }
         }
 
-        /* Custom styles to match the reference and add unique flair */
+        /* Custom styles */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #e2e8f0; /* slate-200 */
         }
 
-        /* Style for the main card */
-        .business-card {
-            background-color: #3b82f6; /* blue-500 */
-            color: white;
-            font-family: 'Inter', sans-serif;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease-in-out;
+        /* --- 3D Flip Card Styles --- */
+
+        /* Container to establish the 3D perspective */
+        .card-scene {
+            perspective: 1500px;
         }
 
-        /* A subtle lift effect on hover for the card */
-        .business-card:hover {
+        /* The flipper element that handles the transform */
+        .card-flipper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        /* The class that triggers the flip */
+        .card-flipper.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* Shared styles for front and back faces */
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* Safari */
+            backface-visibility: hidden;
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+            border-radius: 1rem; /* 16px */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Back face is initially rotated */
+        .card-back {
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        /* --- End Flip Card Styles --- */
+
+        /* A subtle lift effect on hover for the card scene */
+        .card-scene:hover .card-flipper:not(.is-flipped) {
             transform: translateY(-5px);
         }
 
-        /* Styling for the editable fields for better UX */
-        [contenteditable="true"] {
-            outline: 2px dashed transparent;
-            transition: outline 0.2s;
-            border-radius: 4px;
-            padding: 2px 4px;
-            margin: -2px -4px;
-        }
-
-        [contenteditable="true"]:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        [contenteditable="true"]:focus {
-            outline: 2px dashed rgba(255, 255, 255, 0.7);
-            background-color: rgba(0, 0, 0, 0.1);
-        }
-
-        /* Label styling (e.g., NATIONALITY, CONTACT) */
+        /* Label styling */
         .label {
             font-size: 0.65rem;
             letter-spacing: 0.1em;
@@ -82,137 +100,116 @@
             border-color: #bfdbfe; /* blue-200 */
         }
 
-        /* Tic-Tac-Toe game styles - UPDATED */
-        #tic-tac-toe-container {
-            font-family: 'Permanent Marker', cursive;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 1rem;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            position: fixed; /* Changed to fixed to position relative to viewport */
-            top: 2rem;       /* Position from top */
-            right: 2rem;      /* Position from right */
-            z-index: 50;      /* Ensure it's on top of other content */
-            
-            /* Initially hidden for delayed appearance */
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.95) translateY(-10px);
-            transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s;
+        /* "More" button styling */
+        .more-button-container {
+            width: 64px;
+            height: 64px;
+            background-color: white;
+            border-radius: 0.375rem; /* 6px */
+            padding: 4px;
+            transition: transform 0.2s ease;
         }
-
-        /* Class added by JS to make the game visible */
-        #tic-tac-toe-container.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: scale(1) translateY(0);
-        }
-
-        .tic-tac-toe-cell {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2.5rem;
+        .more-button {
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            border: 2px solid #3b82f6;
+            border-radius: 0.25rem; /* 4px */
+            color: #3b82f6;
+            font-weight: 900;
+            font-size: 0.875rem;
             cursor: pointer;
-            color: #1e293b; /* slate-800 */
-            transition: background-color 0.2s;
-            border-color: #cbd5e1; /* slate-300 */
+            transition: all 0.2s ease;
         }
-        
-        .tic-tac-toe-cell:hover {
-            background-color: #e2e8f0; /* slate-200 */
+
+        /* Pushed-in hover effect */
+        .more-button:hover {
+            transform: scale(0.95);
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
         }
-        
-        /* Removing borders to create the classic grid */
-        .tic-tac-toe-cell:nth-child(-n+6) { border-bottom-width: 2px; }
-        .tic-tac-toe-cell:not(:nth-child(3n)) { border-right-width: 2px; }
 
         /* Construction banner styling */
         .construction-banner {
             background-color: #facc15; /* yellow-400 */
             background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.8) 25px, rgba(0,0,0,0.8) 50px, #facc15 50px, #facc15 75px);
-            background-size: 75px 75px; /* Define size for seamless animation */
-            color: white; /* Changed for better readability */
+            background-size: 75px 75px;
+            color: white;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
-            animation: scroll-background 2s linear infinite; /* Added animation */
-            overflow: hidden; /* Ensures clean animation edges */
+            animation: scroll-background 2s linear infinite;
+            overflow: hidden;
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8">
 
-    <!-- Tic-Tac-Toe Game - MOVED outside card, positioned via CSS, and hidden on mobile -->
-    <div id="tic-tac-toe-container" class="hidden sm:block p-4 text-center">
-        <h3 class="text-lg text-slate-700 font-bold font-sans mb-2">Tic-Tac-Toe</h3>
-        <div id="tic-tac-toe-board" class="grid grid-cols-3">
-            <!-- Cells will be generated by JS -->
-        </div>
-        <p id="game-status" class="h-6 mt-2 text-sm text-slate-600 font-sans"></p>
-        <button id="reset-button" class="mt-2 px-4 py-1 bg-blue-500 text-white font-sans text-sm rounded-full hover:bg-blue-600 transition">Reset</button>
-    </div>
-
-    <!-- Main Card Container -->
-    <div class="business-card w-full max-w-lg rounded-2xl p-6 sm:p-8 relative">
-        <!-- Card Header -->
-        <div class="flex justify-between items-start border-b-2 border-blue-400 pb-4">
-            <div>
-                <p class="label">Card</p>
-                <h1 class="text-4xl sm:text-5xl font-black tracking-tighter" contenteditable="true">BARBARA KNUST</h1>
-            </div>
-            <div class="text-right">
-                <p class="label">(高在賢)</p>
-                <p class="font-bold" contenteditable="true">고재현</p>
-            </div>
-        </div>
-
-        <!-- Card Body Grid -->
-        <div class="grid grid-cols-2 gap-x-8 gap-y-6 mt-4">
-            <div>
-                <p class="label">Nationality</p>
-                <p class="font-medium" contenteditable="true">German (+49)</p>
-            </div>
-            <div>
-                <p class="label">Contact</p>
-                <p class="font-medium" contenteditable="true">b.knust@email.com</p>
-            </div>
-            <div>
-                <p class="label">Date of Birth</p>
-                <p class="font-medium" contenteditable="true">OCT 10</p>
-            </div>
-            <div>
-                <p class="label">Mobile</p>
-                <p class="font-medium" contenteditable="true">0176-0010-0010</p>
-            </div>
-        </div>
-
-        <!-- Signature & Scent Section -->
-        <div class="flex items-end justify-between mt-6 pt-4 border-t-2 border-blue-400">
-            <div class="flex items-start gap-4">
-                <div class="w-16 h-16 signature-box relative flex justify-center items-center">
-                    <!-- Corner brackets for style -->
-                    <div class="corner" style="top: -2px; left: -2px; border-top-width: 2px; border-left-width: 2px;"></div>
-                    <div class="corner" style="top: -2px; right: -2px; border-top-width: 2px; border-right-width: 2px;"></div>
-                    <div class="corner" style="bottom: -2px; left: -2px; border-bottom-width: 2px; border-left-width: 2px;"></div>
-                    <div class="corner" style="bottom: -2px; right: -2px; border-bottom-width: 2px; border-right-width: 2px;"></div>
-                    <p class="text-blue-200 text-3xl font-black">BK</p>
+    <!-- Card Scene for 3D perspective -->
+    <div class="card-scene w-full max-w-lg h-[460px]">
+        <div id="card-flipper" class="card-flipper">
+            <!-- Front of the card -->
+            <div class="card-face card-front p-6 sm:p-8 flex flex-col">
+                <!-- Card Header -->
+                <div class="flex justify-between items-start border-b-2 border-blue-400 pb-4">
+                    <div>
+                        <p class="label">Card</p>
+                        <h1 class="text-4xl sm:text-5xl font-black tracking-tighter">BARBARA KNUST</h1>
+                    </div>
+                    <div class="text-right">
+                        <p class="label">(高在賢)</p>
+                        <p class="font-bold">고재현</p>
+                    </div>
                 </div>
-                <div>
-                    <p class="label">Signature Scent</p>
-                    <p class="font-medium" contenteditable="true">Santal 33</p>
+
+                <!-- Card Body Grid -->
+                <div class="grid grid-cols-2 gap-x-8 gap-y-6 mt-4">
+                    <div>
+                        <p class="label">Nationality</p>
+                        <p class="font-medium">German (+49)</p>
+                    </div>
+                    <div>
+                        <p class="label">Contact</p>
+                        <p class="font-medium">b.knust@email.com</p>
+                    </div>
+                    <div>
+                        <p class="label">Date of Birth</p>
+                        <p class="font-medium">OCT 10</p>
+                    </div>
+                    <div>
+                        <p class="label">Mobile</p>
+                        <p class="font-medium">0176-0010-0010</p>
+                    </div>
+                </div>
+
+                <!-- Signature & Scent Section -->
+                <div class="flex items-end justify-between mt-auto pt-4 border-t-2 border-blue-400">
+                    <div class="flex items-start gap-4">
+                        <div class="w-16 h-16 signature-box relative flex justify-center items-center">
+                            <div class="corner" style="top: -2px; left: -2px; border-top-width: 2px; border-left-width: 2px;"></div>
+                            <div class="corner" style="top: -2px; right: -2px; border-top-width: 2px; border-right-width: 2px;"></div>
+                            <div class="corner" style="bottom: -2px; left: -2px; border-bottom-width: 2px; border-left-width: 2px;"></div>
+                            <div class="corner" style="bottom: -2px; right: -2px; border-bottom-width: 2px; border-right-width: 2px;"></div>
+                            <p class="text-blue-200 text-3xl font-black">BK</p>
+                        </div>
+                        <div>
+                            <p class="label">Signature Scent</p>
+                            <p class="font-medium">Santal 33</p>
+                        </div>
+                    </div>
+                     <div class="more-button-container">
+                        <button id="flip-to-back-button" class="more-button">MORE</button>
+                    </div>
                 </div>
             </div>
-             <div class="text-right">
-                <p class="label">More →</p>
-                <img src="https://placehold.co/64x64/ffffff/3b82f6?text=QR" alt="QR Code Placeholder" class="rounded-md mt-1">
+            
+            <!-- Back of the card -->
+            <div class="card-face card-back p-6 sm:p-8">
+                <img src="https://placehold.co/128x128/ffffff/3b82f6?text=QR" alt="QR Code Placeholder" class="rounded-lg">
+                <p class="font-semibold mt-2">Scan for More Information</p>
+                <button id="flip-to-front-button" class="mt-4 px-6 py-2 bg-white text-blue-500 font-bold rounded-full hover:bg-blue-100 transition">← Back</button>
             </div>
         </div>
-
     </div>
 
     <!-- Construction Banner -->
@@ -222,133 +219,21 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Game Visibility Logic ---
-            const gameContainer = document.getElementById('tic-tac-toe-container');
-            // Show the game after 15 seconds
-            setTimeout(() => {
-                gameContainer.classList.add('visible');
-            }, 15000); // 15000 milliseconds = 15 seconds
+            const cardFlipper = document.getElementById('card-flipper');
+            const flipToBackButton = document.getElementById('flip-to-back-button');
+            const flipToFrontButton = document.getElementById('flip-to-front-button');
 
-            // --- Tic-Tac-Toe Game Logic ---
-            const boardElement = document.getElementById('tic-tac-toe-board');
-            const statusElement = document.getElementById('game-status');
-            const resetButton = document.getElementById('reset-button');
-            
-            let board = ['', '', '', '', '', '', '', '', ''];
-            let currentPlayer = 'X';
-            let isGameOver = false;
+            // Function to flip the card
+            const flipCard = () => {
+                cardFlipper.classList.toggle('is-flipped');
+            };
 
-            const winningCombinations = [
-                [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-                [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-                [0, 4, 8], [2, 4, 6]             // diagonals
-            ];
-
-            function createBoard() {
-                boardElement.innerHTML = '';
-                for (let i = 0; i < 9; i++) {
-                    const cell = document.createElement('div');
-                    cell.classList.add('tic-tac-toe-cell');
-                    cell.dataset.index = i;
-                    cell.addEventListener('click', handleCellClick);
-                    boardElement.appendChild(cell);
-                }
-            }
-
-            function handleCellClick(event) {
-                const index = event.target.dataset.index;
-                if (board[index] !== '' || isGameOver || currentPlayer !== 'X') {
-                    return;
-                }
-
-                updateCell(index, 'X');
-                board[index] = 'X';
-
-                if (checkWinner('X')) {
-                    endGame('You win!');
-                } else if (board.every(cell => cell !== '')) {
-                    endGame('It\'s a draw!');
-                } else {
-                    currentPlayer = 'O';
-                    statusElement.textContent = 'Computer is thinking...';
-                    setTimeout(computerMove, 600);
-                }
-            }
-            
-            function computerMove() {
-                if (isGameOver) return;
-                let move = findBestMove();
-                updateCell(move, 'O');
-                board[move] = 'O';
-
-                if (checkWinner('O')) {
-                    endGame('Computer wins!');
-                } else if (board.every(cell => cell !== '')) {
-                    endGame('It\'s a draw!');
-                } else {
-                    currentPlayer = 'X';
-                    statusElement.textContent = 'Your turn!';
-                }
-            }
-
-            function findBestMove() {
-                for (let i = 0; i < 9; i++) {
-                    if (board[i] === '') {
-                        board[i] = 'O';
-                        if (checkWinner('O')) {
-                            board[i] = ''; return i;
-                        }
-                        board[i] = '';
-                    }
-                }
-                for (let i = 0; i < 9; i++) {
-                    if (board[i] === '') {
-                        board[i] = 'X';
-                        if (checkWinner('X')) {
-                            board[i] = ''; return i;
-                        }
-                        board[i] = '';
-                    }
-                }
-                if (board[4] === '') return 4;
-                const corners = [0, 2, 6, 8].filter(i => board[i] === '');
-                if (corners.length > 0) {
-                    return corners[Math.floor(Math.random() * corners.length)];
-                }
-                const available = board.map((val, idx) => val === '' ? idx : null).filter(val => val !== null);
-                return available[Math.floor(Math.random() * available.length)];
-            }
-
-            function checkWinner(player) {
-                return winningCombinations.some(combination => {
-                    return combination.every(index => board[index] === player);
-                });
-            }
-
-            function endGame(message) {
-                isGameOver = true;
-                statusElement.textContent = message;
-            }
-
-            function updateCell(index, player) {
-                const cell = boardElement.children[index];
-                cell.textContent = player;
-                cell.style.cursor = 'not-allowed';
-                cell.style.color = player === 'X' ? '#2563eb' : '#e11d48'; // Blue for X, Rose for O
-            }
-
-            function resetGame() {
-                board = ['', '', '', '', '', '', '', '', ''];
-                currentPlayer = 'X';
-                isGameOver = false;
-                statusElement.textContent = 'Your turn!';
-                createBoard();
-            }
-
-            resetButton.addEventListener('click', resetGame);
-            resetGame();
+            // Event listeners for the buttons
+            flipToBackButton.addEventListener('click', flipCard);
+            flipToFrontButton.addEventListener('click', flipCard);
         });
     </script>
 
 </body>
 </html>
+
