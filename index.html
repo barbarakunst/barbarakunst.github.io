@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbara Knust - Portfolio</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts for modern typography and marker style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+    <style>
+        /* Keyframes for the scrolling banner animation */
+        @keyframes scroll-background {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                /* The value should match the background-size to create a seamless loop */
+                background-position: -75px 0;
+            }
+        }
+
+        /* Custom styles to match the reference and add unique flair */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0; /* slate-200 */
+        }
+
+        /* Style for the main card */
+        .business-card {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* A subtle lift effect on hover for the card */
+        .business-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Styling for the editable fields for better UX */
+        [contenteditable="true"] {
+            outline: 2px dashed transparent;
+            transition: outline 0.2s;
+            border-radius: 4px;
+            padding: 2px 4px;
+            margin: -2px -4px;
+        }
+
+        [contenteditable="true"]:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        [contenteditable="true"]:focus {
+            outline: 2px dashed rgba(255, 255, 255, 0.7);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Label styling (e.g., NATIONALITY, CONTACT) */
+        .label {
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            color: #bfdbfe; /* blue-200 */
+            text-transform: uppercase;
+        }
+
+        /* Signature box styling */
+        .signature-box {
+            border: 2px solid #bfdbfe; /* blue-200 */
+        }
+        .signature-box .corner {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-color: #bfdbfe; /* blue-200 */
+        }
+
+        /* Tic-Tac-Toe game styles */
+        #tic-tac-toe-container {
+            font-family: 'Permanent Marker', cursive;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .tic-tac-toe-cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            cursor: pointer;
+            color: #1e293b; /* slate-800 */
+            transition: background-color 0.2s;
+            border-color: #cbd5e1; /* slate-300 */
+        }
+        
+        .tic-tac-toe-cell:hover {
+            background-color: #e2e8f0; /* slate-200 */
+        }
+        
+        /* Removing borders to create the classic grid */
+        .tic-tac-toe-cell:nth-child(-n+6) { border-bottom-width: 2px; }
+        .tic-tac-toe-cell:not(:nth-child(3n)) { border-right-width: 2px; }
+
+        /* Construction banner styling - UPDATED */
+        .construction-banner {
+            background-color: #facc15; /* yellow-400 */
+            background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.8) 25px, rgba(0,0,0,0.8) 50px, #facc15 50px, #facc15 75px);
+            background-size: 75px 75px; /* Define size for seamless animation */
+            color: white; /* Changed for better readability */
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+            animation: scroll-background 2s linear infinite; /* Added animation */
+            overflow: hidden; /* Ensures clean animation edges */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8">
+
+    <!-- Main Card Container - Added margin-top to give game space -->
+    <div class="business-card w-full max-w-lg rounded-2xl p-6 sm:p-8 relative mt-12">
+        
+        <!-- Tic-Tac-Toe Game positioned in the corner - UPDATED position -->
+        <div id="tic-tac-toe-container" class="absolute -top-12 -right-4 sm:-right-8 p-4 text-center">
+            <h3 class="text-lg text-slate-700 font-bold font-sans mb-2">Tic-Tac-Toe</h3>
+            <div id="tic-tac-toe-board" class="grid grid-cols-3">
+                <!-- Cells will be generated by JS -->
+            </div>
+            <p id="game-status" class="h-6 mt-2 text-sm text-slate-600 font-sans"></p>
+            <button id="reset-button" class="mt-2 px-4 py-1 bg-blue-500 text-white font-sans text-sm rounded-full hover:bg-blue-600 transition">Reset</button>
+        </div>
+
+        <!-- Card Header -->
+        <div class="flex justify-between items-start border-b-2 border-blue-400 pb-4">
+            <div>
+                <p class="label">Card</p>
+                <h1 class="text-4xl sm:text-5xl font-black tracking-tighter" contenteditable="true">BARBARA KNUST</h1>
+            </div>
+            <div class="text-right">
+                <p class="label">(高在賢)</p>
+                <p class="font-bold" contenteditable="true">고재현</p>
+            </div>
+        </div>
+
+        <!-- Card Body Grid -->
+        <div class="grid grid-cols-2 gap-x-8 gap-y-6 mt-4">
+            <div>
+                <p class="label">Nationality</p>
+                <p class="font-medium" contenteditable="true">German (+49)</p>
+            </div>
+            <div>
+                <p class="label">Contact</p>
+                <p class="font-medium" contenteditable="true">b.knust@email.com</p>
+            </div>
+            <div>
+                <p class="label">Date of Birth</p>
+                <p class="font-medium" contenteditable="true">OCT 10</p>
+            </div>
+            <div>
+                <p class="label">Mobile</p>
+                <p class="font-medium" contenteditable="true">0176-0010-0010</p>
+            </div>
+        </div>
+
+        <!-- Signature & Scent Section -->
+        <div class="flex items-end justify-between mt-6 pt-4 border-t-2 border-blue-400">
+            <div class="flex items-start gap-4">
+                <div class="w-16 h-16 signature-box relative flex justify-center items-center">
+                    <!-- Corner brackets for style -->
+                    <div class="corner" style="top: -2px; left: -2px; border-top-width: 2px; border-left-width: 2px;"></div>
+                    <div class="corner" style="top: -2px; right: -2px; border-top-width: 2px; border-right-width: 2px;"></div>
+                    <div class="corner" style="bottom: -2px; left: -2px; border-bottom-width: 2px; border-left-width: 2px;"></div>
+                    <div class="corner" style="bottom: -2px; right: -2px; border-bottom-width: 2px; border-right-width: 2px;"></div>
+                    <p class="text-blue-200 text-3xl font-black">BK</p>
+                </div>
+                <div>
+                    <p class="label">Signature Scent</p>
+                    <p class="font-medium" contenteditable="true">Santal 33</p>
+                </div>
+            </div>
+             <div class="text-right">
+                <p class="label">More →</p>
+                <img src="https://placehold.co/64x64/ffffff/3b82f6?text=QR" alt="QR Code Placeholder" class="rounded-md mt-1">
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Construction Banner -->
+    <div class="construction-banner w-full text-center py-3 mt-12">
+        Under Construction
+    </div>
+
+    <script>
+        // --- Tic-Tac-Toe Game Logic (No changes needed here) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const boardElement = document.getElementById('tic-tac-toe-board');
+            const statusElement = document.getElementById('game-status');
+            const resetButton = document.getElementById('reset-button');
+            
+            let board = ['', '', '', '', '', '', '', '', ''];
+            let currentPlayer = 'X';
+            let isGameOver = false;
+
+            const winningCombinations = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+                [0, 4, 8], [2, 4, 6]             // diagonals
+            ];
+
+            // Function to create the board UI
+            function createBoard() {
+                boardElement.innerHTML = '';
+                for (let i = 0; i < 9; i++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('tic-tac-toe-cell');
+                    cell.dataset.index = i;
+                    cell.addEventListener('click', handleCellClick);
+                    boardElement.appendChild(cell);
+                }
+            }
+
+            // Function to handle a player's click
+            function handleCellClick(event) {
+                const index = event.target.dataset.index;
+                if (board[index] !== '' || isGameOver || currentPlayer !== 'X') {
+                    return;
+                }
+
+                updateCell(index, 'X');
+                board[index] = 'X';
+
+                if (checkWinner('X')) {
+                    endGame('You win!');
+                } else if (board.every(cell => cell !== '')) {
+                    endGame('It\'s a draw!');
+                } else {
+                    currentPlayer = 'O';
+                    statusElement.textContent = 'Computer is thinking...';
+                    // Computer makes a move after a short delay
+                    setTimeout(computerMove, 600);
+                }
+            }
+            
+            // Function for the computer's move
+            function computerMove() {
+                if (isGameOver) return;
+
+                // Simple AI: 1. Win, 2. Block, 3. Random
+                let move = findBestMove();
+                
+                updateCell(move, 'O');
+                board[move] = 'O';
+
+                if (checkWinner('O')) {
+                    endGame('Computer wins!');
+                } else if (board.every(cell => cell !== '')) {
+                    endGame('It\'s a draw!');
+                } else {
+                    currentPlayer = 'X';
+                    statusElement.textContent = 'Your turn!';
+                }
+            }
+
+            // Simple AI logic to find the best move
+            function findBestMove() {
+                // 1. Check if computer can win
+                for (let i = 0; i < 9; i++) {
+                    if (board[i] === '') {
+                        board[i] = 'O';
+                        if (checkWinner('O')) {
+                            board[i] = ''; // backtrack
+                            return i;
+                        }
+                        board[i] = ''; // backtrack
+                    }
+                }
+                // 2. Check if player is about to win and block
+                for (let i = 0; i < 9; i++) {
+                    if (board[i] === '') {
+                        board[i] = 'X';
+                        if (checkWinner('X')) {
+                            board[i] = ''; // backtrack
+                            return i;
+                        }
+                        board[i] = ''; // backtrack
+                    }
+                }
+                // 3. Take center if available
+                if (board[4] === '') return 4;
+                
+                // 4. Take a random available corner
+                const corners = [0, 2, 6, 8].filter(i => board[i] === '');
+                if (corners.length > 0) {
+                    return corners[Math.floor(Math.random() * corners.length)];
+                }
+                
+                // 5. Take any random available spot
+                const available = board.map((val, idx) => val === '' ? idx : null).filter(val => val !== null);
+                return available[Math.floor(Math.random() * available.length)];
+            }
+
+
+            // Function to check if a player has won
+            function checkWinner(player) {
+                return winningCombinations.some(combination => {
+                    return combination.every(index => board[index] === player);
+                });
+            }
+
+            // Function to end the game
+            function endGame(message) {
+                isGameOver = true;
+                statusElement.textContent = message;
+            }
+
+            // Function to update the UI for a cell
+            function updateCell(index, player) {
+                const cell = boardElement.children[index];
+                cell.textContent = player;
+                cell.style.cursor = 'not-allowed';
+                cell.style.color = player === 'X' ? '#2563eb' : '#e11d48'; // Blue for X, Rose for O
+            }
+
+            // Function to reset the game
+            function resetGame() {
+                board = ['', '', '', '', '', '', '', '', ''];
+                currentPlayer = 'X';
+                isGameOver = false;
+                statusElement.textContent = 'Your turn!';
+                createBoard();
+            }
+
+            // Initialize the game
+            resetButton.addEventListener('click', resetGame);
+            resetGame();
+        });
+    </script>
+
+</body>
+</html>
