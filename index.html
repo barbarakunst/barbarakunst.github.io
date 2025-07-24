@@ -8,36 +8,23 @@
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts for modern typography -->
+    <!-- Google Fonts for modern typography - IBM Plex Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        /* Keyframes for the scrolling banner animation */
-        @keyframes scroll-background {
-            from {
-                background-position: 0 0;
-            }
-            to {
-                background-position: -75px 0;
-            }
-        }
-
         /* Custom styles */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #e2e8f0; /* slate-200 */
+            /* Changed font to a monospace font similar to Letter Gothic Std */
+            font-family: 'IBM Plex Mono', monospace;
+            background-color: #f1f5f9; /* slate-100 */
         }
 
         /* --- 3D Flip Card Styles --- */
-
-        /* Container to establish the 3D perspective */
         .card-scene {
             perspective: 1500px;
         }
-
-        /* The flipper element that handles the transform */
         .card-flipper {
             position: relative;
             width: 100%;
@@ -45,26 +32,20 @@
             transition: transform 0.8s;
             transform-style: preserve-3d;
         }
-
-        /* The class that triggers the flip */
         .card-flipper.is-flipped {
             transform: rotateY(180deg);
         }
-
-        /* Shared styles for front and back faces */
         .card-face {
             position: absolute;
             width: 100%;
             height: 100%;
             -webkit-backface-visibility: hidden; /* Safari */
             backface-visibility: hidden;
-            background-color: #3b82f6; /* blue-500 */
+            background-color: #1e293b; /* slate-800 */
             color: white;
             border-radius: 1rem; /* 16px */
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-
-        /* Back face is initially rotated */
         .card-back {
             transform: rotateY(180deg);
             display: flex;
@@ -73,31 +54,33 @@
             align-items: center;
             gap: 1rem;
         }
-        
-        /* --- End Flip Card Styles --- */
-
-        /* A subtle lift effect on hover for the card scene */
         .card-scene:hover .card-flipper:not(.is-flipped) {
             transform: translateY(-5px);
+        }
+        /* --- End Flip Card Styles --- */
+
+        /* Applying bold font weight to headlines */
+        h1 {
+            font-weight: 700;
         }
 
         /* Label styling */
         .label {
             font-size: 0.65rem;
             letter-spacing: 0.1em;
-            color: #bfdbfe; /* blue-200 */
+            color: #94a3b8; /* slate-400 */
             text-transform: uppercase;
         }
 
         /* Signature box styling */
         .signature-box {
-            border: 2px solid #bfdbfe; /* blue-200 */
+            border: 2px solid #64748b; /* slate-500 */
         }
         .signature-box .corner {
             position: absolute;
             width: 8px;
             height: 8px;
-            border-color: #bfdbfe; /* blue-200 */
+            border-color: #64748b; /* slate-500 */
         }
 
         /* "More" button styling */
@@ -113,33 +96,17 @@
             width: 100%;
             height: 100%;
             background-color: white;
-            border: 2px solid #3b82f6;
+            border: 2px solid #1e293b; /* slate-800 */
             border-radius: 0.25rem; /* 4px */
-            color: #3b82f6;
-            font-weight: 900;
+            color: #1e293b; /* slate-800 */
+            font-weight: 700;
             font-size: 0.875rem;
             cursor: pointer;
             transition: all 0.2s ease;
         }
-
-        /* Pushed-in hover effect */
         .more-button:hover {
             transform: scale(0.95);
             box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        /* Construction banner styling */
-        .construction-banner {
-            background-color: #facc15; /* yellow-400 */
-            background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.8) 25px, rgba(0,0,0,0.8) 50px, #facc15 50px, #facc15 75px);
-            background-size: 75px 75px;
-            color: white;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
-            animation: scroll-background 2s linear infinite;
-            overflow: hidden;
         }
     </style>
 </head>
@@ -151,12 +118,11 @@
             <!-- Front of the card -->
             <div class="card-face card-front p-6 sm:p-8 flex flex-col">
                 <!-- Card Header -->
-                <div class="flex justify-between items-start border-b-2 border-blue-400 pb-4">
+                <div class="flex justify-between items-start border-b-2 border-slate-600 pb-4">
                     <div>
                         <p class="label">Card</p>
-                        <h1 class="text-4xl sm:text-5xl font-black tracking-tighter">BARBARA KNUST</h1>
+                        <h1 class="text-4xl sm:text-5xl tracking-tighter">BARBARA KNUST</h1>
                     </div>
-             
                 </div>
 
                 <!-- Card Body Grid -->
@@ -179,6 +145,16 @@
                     </div>
                 </div>
 
+                <!-- Signature & More Button Section -->
+                <div class="flex items-end justify-between mt-auto pt-4 border-t-2 border-slate-600">
+                    <div class="flex items-start gap-4">
+                        <div class="w-16 h-16 signature-box relative flex justify-center items-center">
+                            <div class="corner" style="top: -2px; left: -2px; border-top-width: 2px; border-left-width: 2px;"></div>
+                            <div class="corner" style="top: -2px; right: -2px; border-top-width: 2px; border-right-width: 2px;"></div>
+                            <div class="corner" style="bottom: -2px; left: -2px; border-bottom-width: 2px; border-left-width: 2px;"></div>
+                            <div class="corner" style="bottom: -2px; right: -2px; border-bottom-width: 2px; border-right-width: 2px;"></div>
+                            <p class="text-slate-400 text-3xl font-bold">BK</p>
+                        </div>
                     </div>
                      <div class="more-button-container">
                         <button id="flip-to-back-button" class="more-button">MORE</button>
@@ -188,17 +164,17 @@
             
             <!-- Back of the card -->
             <div class="card-face card-back p-6 sm:p-8">
-                <img src="https://placehold.co/128x128/ffffff/3b82f6?text=QR" alt="QR Code Placeholder" class="rounded-lg">
-                <p class="font-semibold mt-2">Scan for More Information</p>
-                <button id="flip-to-front-button" class="mt-4 px-6 py-2 bg-white text-blue-500 font-bold rounded-full hover:bg-blue-100 transition">← Back</button>
+                <a href="https://ik.imagekit.io/ex6ksvxsvk/Barbara-Knust_Katalog_2025_klein.pdf?updatedAt=1753369668112" target="_blank" rel="noopener noreferrer" class="transition hover:scale-105">
+                    <img src="https://ik.imagekit.io/ex6ksvxsvk/pdfdownload.png?updatedAt=1753096977321" alt="Download PDF Catalog" class="rounded-lg w-32 h-auto">
+                </a>
+                <p class="font-semibold mt-4">Download Catalog</p>
+                <button id="flip-to-front-button" class="mt-4 px-6 py-2 bg-white text-slate-800 font-bold rounded-full hover:bg-slate-200 transition">← Back</button>
             </div>
         </div>
     </div>
 
-    <!-- Construction Banner -->
-    <div class="construction-banner w-full text-center py-3 mt-12">
-        Under Construction
-    </div>
+    <!-- Signature Image -->
+    <img src="https://ik.imagekit.io/ex6ksvxsvk/image.png?updatedAt=1753369257633" alt="Barbara Knust Signature" class="mt-12 mx-auto w-auto h-16">
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -219,4 +195,3 @@
 
 </body>
 </html>
-
